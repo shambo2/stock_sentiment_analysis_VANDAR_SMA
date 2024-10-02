@@ -148,24 +148,6 @@ for i in range(len(data_amd)):
     if data_amd.index[i].date() in vader_Sell:
         vader_sell.append(i)
 
-# Display headlines and VADER scores
-st.write("##### News Headlines and VADER Scores")
-st.write("""
-To gather news headlines for the project, I used NewsAPI, which provides access to a wide range of news sources. I requested headlines related to specific stocks (In this case AMD) over a set time frame, pulling the title, description, and publication date.
-
-To calculate the sentiment score, I used VADER (Valence Aware Dictionary and Sentiment Reasoner), a pre-trained model designed for text sentiment analysis. VADER assigns a compound score to each headline, ranging from -1 (most negative) to +1 (most positive). This score allows us to quantify the sentiment of each news article, which we then use to analyze its potential impact on stock price movements. 
-
-In addition to calculating the sentiment score, I identified extreme VADER scores by focusing on particularly strong sentiment signals. A score above 0.20 is considered highly positive and treated as a potential buy signal, while a score below -0.20 is considered highly negative, signaling a potential sell. These extreme scores allow us to filter out neutral or mild sentiment and focus on market-moving news events.
-""")
-
-
-# Display the final_news DataFrame
-st.write(final_news[['publishedAt', 'title', 'compound_vader_score']])
-
-# Display the extreme_scores_df DataFrame
-st.write("##### Extreme VADER Scores by Date")
-st.write(extreme_scores_df)
-
 # Create Plotly figure for VADER trade calls
 fig_vader = go.Figure()
 
@@ -224,8 +206,26 @@ st.write("This section shows the trade calls based on Simple Moving Averages (SM
 st.plotly_chart(fig_sma)
 
 st.write("## VADER Trade Calls")
-st.write("This section shows the trade calls based on VADER sentiment analysis.")
+# Display headlines and VADER scores
 st.plotly_chart(fig_vader)
+
+# Create a checkbox to toggle the display of DataFrames
+show_dataframes = st.checkbox('Show Data of Articles & VADER Scores')
+
+if show_dataframes:
+    # Display the final_news DataFrame
+    st.write(final_news[['publishedAt', 'title', 'compound_vader_score']])
+
+    # Display the extreme_scores_df DataFrame
+    st.write("##### Extreme VADER Scores by Date")
+    st.write(extreme_scores_df)
+st.write("""
+To gather news headlines for the project, I used NewsAPI, which provides access to a wide range of news sources. I requested headlines related to specific stocks (In this case AMD) over a set time frame, pulling the title, description, and publication date.
+
+To calculate the sentiment score, I used VADER (Valence Aware Dictionary and Sentiment Reasoner), a pre-trained model designed for text sentiment analysis. VADER assigns a compound score to each headline, ranging from -1 (most negative) to +1 (most positive). This score allows us to quantify the sentiment of each news article, which we then use to analyze its potential impact on stock price movements. 
+
+In addition to calculating the sentiment score, I identified extreme VADER scores by focusing on particularly strong sentiment signals. A score above 0.20 is considered highly positive and treated as a potential buy signal, while a score below -0.20 is considered highly negative, signaling a potential sell. These extreme scores allow us to filter out neutral or mild sentiment and focus on market-moving news events.
+""")
 
 st.write("## Merged Trade Calls")
 st.write("This section shows the merged trade calls from both SMA and VADER analysis.")
